@@ -1,1 +1,3 @@
 avatar/*.jpg
+appendonly.aof
+__pycache__/

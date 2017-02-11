@@ -1,8 +1,12 @@
 #/usr/bin/env pyuthon
 # coding=utf-8
 
+from Db import db
+from User import User
+from Splider import Splider
 
+# user = User(20484397)
+# result = db.crawl(user.follow())
+# print(result)
 
-if __name__ == '__main__':
-    
-    pass
+# print(user.follow())
