@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import redis
+from Console import console
 
 class DB(object):
     ALL_USER = 'user_set' # 所有uid集合
