@@ -1,11 +1,14 @@
 #!/usr/bin/env pyuthon
 # coding=utf-8
 
+import time
 import requests, re
-from bs4 import BeautifulSoup
 from Db import db
 from User import User
 import sys
+from Console import console
+from multiprocessing import Pool
+from multiprocessing.dummy import Pool as mulThread
 
 class Splider(object):
     """
@@ -56,6 +59,16 @@ class Splider(object):
 
         return self.db.noCrawl(data)
 
+    def mulThreadTime(self, name, arg,nums=4):
+        '''多线程计时'''
+        pool = mulThread(processes=nums) #开启四个线程
+        time3 = time.time()
+        pool.map(name,arg)
+        pool.close()
+        pool.join() #等待线程池中的worker进程执行完毕
+        time4 = time.time()
+        return str(time4 - time3)
+
 
     def crawl_info(self):
         """
@@ -68,8 +81,26 @@ class Splider(object):
         uid = self.db.spop()
 
         if uid is not None:
-            print('uid:{uid} Start...\r'.format(uid=uid),)
+            # print('uid:{uid} Start...\r'.format(uid=uid),)
+            console.info('uid:{uid} Start ...'.format(uid=uid), False)
             user = User(uid)
+
+            pool = mulThread(processes=4) #开启四个线程
+            time3 = time.time()
+            pool.map(self.db.noCrawl,user.fans())
+            pool.map(self.db.noCrawl,user.follows())
+            pool.close()
+            pool.join()
+            time4 = time.time()
+            times = str(time4-time3)
+            console.success(times[0:5]+"s............", False)
+            # time1 = self.mulThreadTime(self.db.noCrawl,user.fans())
+            # console.success(time1)
+            # time2 = self.mulThreadTime(self.db.noCrawl,user.follows())
+            # console.success
+
+            # self.db.noCrawl(user.fans())
+            # self.db.noCrawl(user.follows())
             # print(user.id)
             info = {
                 'uid':user.id,
@@ -90,8 +121,12 @@ class Splider(object):
             }
 
             if self.db.insert_user(info):
-                print("..............OK!\r",)
-                sys.stdout.flush()
+                self.db.isCrawl(int(uid))
+                # print("..............OK!\r",)
+                console.success("[ok]", False)
+                console.success(" count:{0}|noCrawl:{1}|Crowl:{2}|last:{3}".format(self.db.usersNum, self.db.noCrowlNum, self.db.CrowlNum, self.db.noCrowlNum-self.db.CrowlNum))
+                # sys.stdout.flush()
+
                 return uid
             else:
                 print("..............Fault!")

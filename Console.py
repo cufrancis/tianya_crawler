@@ -29,29 +29,32 @@ class Console(object):
         """
         pass
 
-    def info(self, msg):
+    def info(self, msg, close=True):
         """
         普通文本
         白色
         """
         print("{info}{msg}".format(info=self.INFO, msg=msg),end='')
-        # self.close()
+        if close:
+            self.close()
 
-    def success(self, msg):
+    def success(self, msg, close=True):
         """
         显示成功信息
         信息为绿色
         """
         print("{success}{msg}".format(success=self.SUCCESS, msg=msg),end='')
-        # self.close()
+        if close:
+            self.close()
 
-    def error(self, msg):
+    def error(self, msg, close=True):
         """
         错误警报
         信息为红色
         """
         print("{error}{msg}".format(error=self.ERROR, msg=msg),end='')
-        # self.close()
+        if close:
+            self.close()
 
     def close(self):
         print("\r")

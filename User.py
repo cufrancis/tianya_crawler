@@ -63,7 +63,7 @@ class User(object):
         # return int(m.group(1))
         return int(self._get(r'\<a\shref=\".*\/follow\"\>(\d+)\<\/a\>', 0))
 
-    def follow(self):
+    def follows(self):
         """
         关注列表
         关注列表查询api接口：
@@ -196,7 +196,7 @@ class User(object):
 #     '注册时间':user.regTime,
 #     '登录次数':user.loginNum,
 #     '最新登录':user.newLogin,
-#     '关注数':user.follow(),
+#     '关注数':user.follow_num,
 #     '粉丝数':user.fans_num,
 #     '积分':user.integral,
 #     '生日':user.birthday,

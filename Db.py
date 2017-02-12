@@ -52,6 +52,24 @@ class DB(object):
             # logging
             return result
 
+    @property
+    def usersNum(self):
+        """
+        返回总数
+        """
+        return int(self.r.scard(self.ALL_USER))
+
+    @property
+    def noCrowlNum(self):
+        """
+        未抓取数
+        """
+        return int(self.r.scard(self.NO_CRAWL))
+
+    @property
+    def CrowlNum(self):
+        return self.r.scard(self.CRAWL)
+
     def noCrawl(self, data):
         """
         存放未抓取的数据，key类型为set,
@@ -73,8 +91,10 @@ class DB(object):
 
         try:
             for k in data:
+                # console.info("insert uid:{uid} ...".format(uid=k), False)
                 p.sadd(self.NO_CRAWL, k)
                 p.sadd(self.ALL_USER, k) # 另存一份到ALL_USER表中
+                # console.success("[ok]")
             result = p.execute()
         except:
             return 0
@@ -89,7 +109,7 @@ class DB(object):
 
         return list|int
         """
-        CRAWL = 'crawl'
+        # CRAWL = 'crawl'
 
         # 如果是int类型，转换成list
         if isinstance(data, int):
